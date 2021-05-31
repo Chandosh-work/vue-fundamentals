@@ -1,0 +1,64 @@
+<html>
+    <head>
+        <title>Shopping List App</title>
+        <link rel="stylesheet" href="main.css"></link>
+    </head>
+    <body>
+        <script src="https://unpkg.com/vue"></script>
+        <div id="shopping-list">
+            <div>
+                <h1> Welcome Chan</h1>
+                <h1> {{header.toLocaleUpperCase()}} </h1>
+                <button v-if="state === 'default'" @click="changeState('edit')"> 
+                    Add
+                </button>
+                <button v-else  @click="changeState('default')">
+                    Cancel
+                </button>
+            </div>
+            
+            <div v-if="state === 'edit'">
+                <input :placeholder="'Enter Item'" type="text" v-model="newItem" @mouseup ="saveItem">
+                <span> {{characterCount}}/200</span>
+                <button  v-bind:disabled="newItem.length == 0" v-on:click="saveItem">Save Item</button>
+            </div>
+            <ul>
+                <li v-for="item of items" :class="{'selected': item.selected}"> {{item.item}}</li>
+            </ul>
+            <p v-if="items.length === 0">Congrats. You have bought all Items.</p>
+         
+        </div>
+        <script>
+            var dataList = new Vue({
+                el: "#shopping-list",
+                data: {
+                    state: 'default',
+                    header: 'Shopping List App',
+                    items: [
+                    { item:"Hat", selected: false },
+                    { item:"Games", selected: true },
+                    { item:"Cup", selected: false }
+                ],
+                newItem: ''
+                },
+                methods: {
+                    saveItem: function() {
+                        if(this.newItem) {
+                            this.items.push({ item:this.newItem, selected: false });
+                            this.newItem = "";
+                        }
+                    },
+                    changeState: function(newState) {
+                        this.state = newState;
+                        this.newItem = "";
+                    } 
+                },
+                computed: {
+                    characterCount() {
+                        return this.newItem.length;
+                    }
+                }
+            });
+        </script>
+    </body>
+</html>
